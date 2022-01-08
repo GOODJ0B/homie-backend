@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class HomieBackendApplication {
 
-	public static void main(String[] args) throws MqttException, InterruptedException {
+	public static void main(String[] args) throws MqttException {
 		SpringApplication.run(HomieBackendApplication.class, args);
 		new MqttOrchestrator();
 	}
