@@ -30,7 +30,7 @@ public class MqttOrchestrator {
             byte[] payload = msg.getPayload();
             String payloadString = new String(payload, StandardCharsets.UTF_8);
 
-            System.out.println(topic + ": " + new String(payload, StandardCharsets.UTF_8));
+            System.out.println("Ontvangen: " + topic + " " + payloadString);
 
             mqttHandler.send("z2m/vensterbank-links/set/state", vensterbankLinksOn ? "OFF" : "ON");
             mqttHandler.send("z2m/vensterbank-rechts/set/state", vensterbankLinksOn ? "OFF" : "ON");

@@ -3,8 +3,6 @@ package nl.jantineislief.homiebackend.mqtt;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public class MqttHandler {
 
@@ -34,6 +32,7 @@ public class MqttHandler {
             System.out.println("Niet verbonden voor topic " + topic);
             return null;
         }
+        System.out.println("Verzenden: " + topic + " " + payload);
         MqttMessage message = new MqttMessage(payload.getBytes(StandardCharsets.UTF_8));
         message.setQos(1);
         message.setRetained(false);
