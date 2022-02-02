@@ -17,7 +17,7 @@ public class MqttHandler {
     private final IMqttClient mqttClient;
 
     private MqttHandler() throws MqttException {
-        mqttClient = new MqttClient("tcp://192.168.0.31:1883", "homie-backend");
+        mqttClient = new MqttClient("tcp://192.168.0.31:1883", "homie-backend2");
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
@@ -29,10 +29,10 @@ public class MqttHandler {
 
     public Void send(String topic, String payload) throws MqttException {
         if ( !mqttClient.isConnected()) {
-            System.out.println("Niet verbonden voor topic " + topic);
+            System.out.println("Kan niet verzenden. Niet verbonden voor topic " + topic);
             return null;
         }
-        System.out.println("Verzenden: " + topic + " " + payload);
+        System.out.println("--> Verzenden: " + topic + " " + payload);
         MqttMessage message = new MqttMessage(payload.getBytes(StandardCharsets.UTF_8));
         message.setQos(1);
         message.setRetained(false);
