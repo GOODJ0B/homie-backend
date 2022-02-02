@@ -17,7 +17,7 @@ public class MqttHandler {
     private final IMqttClient mqttClient;
 
     private MqttHandler() throws MqttException {
-        mqttClient = new MqttClient("tcp://192.168.0.31:1883", "homie-backend-" + System.getProperty("os.name").split(" ")[0]);
+        mqttClient = new MqttClient("tcp://192.168.0.31:1883", "homie-backend-" + System.getProperty("os.name").split(" ")[0].toLowerCase());
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
