@@ -1,6 +1,8 @@
 package nl.jantineislief.homiebackend.mqtt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nl.jantineislief.homiebackend.mqtt.model.Lamp;
+import nl.jantineislief.homiebackend.mqtt.model.Lampen;
 import nl.jantineislief.homiebackend.mqtt.model.TradfiPayload;
 import org.eclipse.paho.client.mqttv3.MqttException;
 
@@ -29,9 +31,17 @@ public class MqttOrchestrator {
 
             System.out.println("Ontvangen: " + topic + " " + payloadString);
 
-            mqttHandler.send("cmnd/tvkast/POWER", tvkastOn ? "OFF" : "ON");
-            mqttHandler.send("z2m/vensterbank-links/set/state", tvkastOn ? "OFF" : "ON");
-            mqttHandler.send("z2m/vensterbank-rechts/set/state", tvkastOn ? "OFF" : "ON");
+            if (tvkastOn) {
+                Lampen.vensterbankLinks.aan();
+                Lampen.vensterbankRechts.aan();
+                Lampen.tvKast.aan();
+                Lampen.buiten.aan();
+            } else {
+                Lampen.vensterbankLinks.uit();
+                Lampen.vensterbankRechts.uit();
+                Lampen.tvKast.uit();
+                Lampen.buiten.uit();
+            }
         });
     }
 

@@ -7,17 +7,24 @@ import java.nio.charset.StandardCharsets;
 public class MqttHandler {
 
     private static MqttHandler handler;
-    public static MqttHandler getHandler() throws MqttException {
+    public static MqttHandler getHandler() {
         if (handler != null && handler.mqttClient.isConnected()) {
             return handler;
         }
-        return new MqttHandler();
+        try {
+            handler = new MqttHandler();
+            return handler;
+        } catch (MqttException e) {
+            return null;
+        }
     }
 
     private final IMqttClient mqttClient;
 
     private MqttHandler() throws MqttException {
-        mqttClient = new MqttClient("tcp://192.168.0.31:1883", "homie-backend-" + System.getProperty("os.name").split(" ")[0].toLowerCase());
+        mqttClient = new MqttClient(
+                "tcp://192.168.0.31:1883",
+                "homie-backend-" + System.getProperty("os.name").split(" ")[0].toLowerCase());
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
@@ -27,7 +34,11 @@ public class MqttHandler {
         send("homie-backend", "ONLINE");
     }
 
-    public Void send(String topic, String payload) throws MqttException {
+    public Void send(String topic, int payload) {
+        return this.send(topic, payload + "");
+    }
+
+    public Void send(String topic, String payload) {
         if ( !mqttClient.isConnected()) {
             System.out.println("Kan niet verzenden. Niet verbonden voor topic " + topic);
             return null;
@@ -36,7 +47,11 @@ public class MqttHandler {
         MqttMessage message = new MqttMessage(payload.getBytes(StandardCharsets.UTF_8));
         message.setQos(1);
         message.setRetained(false);
-        mqttClient.publish(topic, message);
+        try {
+            mqttClient.publish(topic, message);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
