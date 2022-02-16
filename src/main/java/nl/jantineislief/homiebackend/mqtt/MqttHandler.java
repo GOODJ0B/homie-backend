@@ -22,16 +22,26 @@ public class MqttHandler {
     private final IMqttClient mqttClient;
 
     private MqttHandler() throws MqttException {
+        String osType = System.getProperty("os.name").split(" ")[0].toLowerCase();
+        String serverIp = osType.contains("linux")
+                ? "pi"
+                : "pi4.jj";
+
+        System.out.print("OS Type: ");
+        System.out.println(osType);
+        System.out.print("MQTT Server IP: ");
+        System.out.println(serverIp);
+
         mqttClient = new MqttClient(
-                "tcp://192.168.0.31:1883",
-                "homie-backend-" + System.getProperty("os.name").split(" ")[0].toLowerCase());
+                "tcp://" + serverIp + ":1883",
+                "homie-backend-" + osType);
         MqttConnectOptions options = new MqttConnectOptions();
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
         options.setConnectionTimeout(10);
         mqttClient.connect(options);
 
-        send("homie-backend", "ONLINE");
+        send("homie-backend-" + osType, "ONLINE");
     }
 
     public Void send(String topic, int payload) {
